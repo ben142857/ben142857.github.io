@@ -264,7 +264,7 @@
     AV.init({
       appId: 'oqcCRjPQseMqzqf7FaGB4xqI-gzGzoHsz',
       appKey: 'aKiQcOefNuKOhLKOYXmwgRlr',
-      serverURLs: 'https://ben142857.github.io/',
+      serverURLs: '',
     });
 
     const showCount = (Counter) => {
@@ -279,7 +279,7 @@
     }
 
     const addCount = (Counter) => {
-      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://ben142857.github.io';
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'http://xywangb.cn';
       var query = new Counter;
       query.save({
         words: url
