@@ -169,6 +169,9 @@
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>October 26, 2020</span
         class="post-info-item">
       
+      <span class="post-info-item"><i class="iconfont iconeye"></i><span id="/2020/10/26/%E6%A2%A6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%9C%B0%E6%96%B9/"
+          class="leancloud" data-flag-title="梦开始的地方"></span></span>
+      
       <span class="post-info-item"><i class="iconfont iconfont-size"></i>144</span>
     </div>
   </div>
@@ -212,6 +215,32 @@
   <div class="btn" id="comments-btn">查看评论</div>
   
   
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "oqcCRjPQseMqzqf7FaGB4xqI-gzGzoHsz",
+        app_key: "aKiQcOefNuKOhLKOYXmwgRlr",
+        placeholder: "留下点什么",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
 </section>
       
     </section>
@@ -309,6 +338,43 @@
 <script src="/js/script.js"></script>
 
 
+
+<script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'oqcCRjPQseMqzqf7FaGB4xqI-gzGzoHsz',
+      appKey: 'aKiQcOefNuKOhLKOYXmwgRlr',
+      serverURLs: 'https://ben142857.github.io/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'http://example.com';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+    
+  });
+</script>
 
 
 
