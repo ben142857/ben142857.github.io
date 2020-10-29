@@ -7,13 +7,17 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>归档 - 汐语: 2020/10</title>
+  <title>java锁之ReentrantLock - 汐语</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
 
   
   
+  <meta name="description" content="ReentrantLock的源码学习笔记
+
+
+开个新坑..."> 
   
   <meta name="author" content="wangb"> 
 
@@ -106,7 +110,7 @@
 
 <nav class="navbar">
   <div class="left"></div>
-  <div class="center">归档</div>
+  <div class="center">java锁之ReentrantLock</div>
   <div class="right">
     
       <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
@@ -157,35 +161,100 @@
   </div>
 </nav>
   <main id="main">
-  <section class="archive">
-    <div class="archive-container">
-      <div class="archive-post">
-        <h3 class="archive-total">归档: 3 篇</h3>
-        
-        
-        
-        <h3 class="archive-year">2020 年</h3>
-        
-        <div class="archive-item">
-          <a class="archive-date" href="/2020/10/16/java%E9%94%81%E4%B9%8BReentrantLock/">十月 16</a>
-          <a class="archive-title" href="/2020/10/16/java%E9%94%81%E4%B9%8BReentrantLock/">java锁之ReentrantLock</a>
-        </div>
-        
-        
-        <div class="archive-item">
-          <a class="archive-date" href="/2020/10/13/%E6%97%A5%E8%AF%AD%EF%BC%88%E4%B8%80%EF%BC%89/">十月 13</a>
-          <a class="archive-title" href="/2020/10/13/%E6%97%A5%E8%AF%AD%EF%BC%88%E4%B8%80%EF%BC%89/">日语学习篇（一）</a>
-        </div>
-        
-        
-        <div class="archive-item">
-          <a class="archive-date" href="/2020/09/26/%E6%A2%A6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%9C%B0%E6%96%B9/">九月 26</a>
-          <a class="archive-title" href="/2020/09/26/%E6%A2%A6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%9C%B0%E6%96%B9/">起始的地方</a>
-        </div>
-        
-      </div>
+  <div class="container" id="container">
+    <article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/theme/lake.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">java锁之ReentrantLock</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>十月 16, 2020</span
+        class="post-info-item">
+      
+      <span class="post-info-item"><i class="iconfont iconeye"></i><span id="/2020/10/16/java%E9%94%81%E4%B9%8BReentrantLock/"
+          class="leancloud" data-flag-title="java锁之ReentrantLock"></span></span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>42</span>
     </div>
-  </section>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <p>开个新坑，填坑日期未知╮(╯▽╰)╭</p>
+      </section>
+      <section class="extra">
+        
+        <ul class="copyright">
+  
+  <li><strong>本文作者：</strong>wangb</li>
+  <li><strong>本文链接：</strong><a href="http://xywangb.cn/2020/10/16/java%E9%94%81%E4%B9%8BReentrantLock/index.html">http://xywangb.cn/2020/10/16/java%E9%94%81%E4%B9%8BReentrantLock/index.html</a></li>
+  <li><strong>版权声明：</strong>本博客所有文章均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
+      rel="external nofollow" target="_blank"> BY-NC-SA </a>许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        <section class="donate">
+  <div class="qrcode">
+    <img   class="lazyload" data-original="/images/theme/alipay.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%EF%BC%8C%E9%94%81/" rel="tag">源码，锁</a></li></ul>
+
+        
+<nav class="nav">
+  
+  
+    <a href="/2020/10/13/%E6%97%A5%E8%AF%AD%EF%BC%88%E4%B8%80%EF%BC%89/">日语学习篇（一）<i class="iconfont iconright"></i></a>
+  
+</nav>
+
+      </section>
+      
+      <section class="comments">
+  
+  <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "oqcCRjPQseMqzqf7FaGB4xqI-gzGzoHsz",
+        app_key: "aKiQcOefNuKOhLKOYXmwgRlr",
+        placeholder: "留下点什么~",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article>
+  </div>
 </main>
   <footer class="footer">
   <div class="footer-social">
