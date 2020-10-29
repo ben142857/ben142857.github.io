@@ -7,7 +7,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>汐语</title>
+  <title>学习 - 汐语</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
@@ -62,7 +62,7 @@
     var CONFIG = window.CONFIG || {};
     var ZHAOO = window.ZHAOO || {};
     CONFIG = {
-      isHome: true,
+      isHome: false,
       fancybox: true,
       pjax: false,
       lazyload: {
@@ -103,6 +103,17 @@
   <div class="loading"></div>
   
 
+
+<nav class="navbar">
+  <div class="left"></div>
+  <div class="center">标签</div>
+  <div class="right">
+    
+      <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+    
+    <i class="iconfont iconmenu j-navbar-menu"></i>
+  </div>
+</nav>
 
   <nav class="menu">
   <div class="menu-wrap">
@@ -146,106 +157,23 @@
   </div>
 </nav>
   <main id="main">
-  
-    <div class="preview">
-  <nav class="navbar j-navbar-menu">
-    <i class="iconfont iconmenu"></i>
-  </nav>
-  <div class="preview-image">
-    <h2 class="preview-motto" id="motto"></h2>
-    <!-- <span class="preview-cursor">|</span> -->
-    
-    <div class="preview-overlay">
-      <svg class="preview-waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
-        <defs>
-          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-        </defs>
-        <g class="preview-parallax">
-          <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(var(--color-background-rgb), 0.7" />
-          <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(var(--color-background-rgb), 0.5)" />
-          <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(var(--color-background-rgb), 0.3)" />
-          <use xlink:href="#gentle-wave" x="48" y="7" fill="rgb(var(--color-background-rgb))" />
-        </g>
-      </svg>
-    </div>
-    
-  </div>
-  <div class="preview-scroll">
-    <a href="#container" class="smooth-scroll"><i class="iconfont iconMouse"></i></a>
-  </div>
-</div>
-  
-  <div class="container" id="container">
-    <section class="row post">
-  
-  <div class="col-lg-4 col-md-6 col-sm-12 post-item">
-  <div class="post-wrap">
-    
-    <div class="post-top">
-      <div>置顶</div>
-    </div>
-    
-    <a href="/2020/09/26/%E6%A2%A6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%9C%B0%E6%96%B9/" class="post-image">
-      <img   class="lazyload" data-original="/images/theme/test.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
-    </a>
-    <div class="post-content">
-      <h3 class="post-title"><a href="/2020/09/26/%E6%A2%A6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%9C%B0%E6%96%B9/">起始的地方</a></h3>
-      
-      
-      
-      <div class="post-excerpt">
-        <p class="substr-3">My first blog</p>
-      </div>
-      <div class="post-info">
-        <span class="post-info-item"><i class="iconfont iconcalendar"></i>九月 26, 2020</span
-          class="post-info-item">
+  <section class="archive">
+    <div class="archive-container">
+      <div class="archive-post">
+        <h2 class="archive-total"># 学习</h2>
         
-        <span class="post-info-item"><i class="iconfont iconeye"></i><span id="/2020/09/26/%E6%A2%A6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%9C%B0%E6%96%B9/"
-            class="leancloud" data-flag-title="起始的地方"></span></span>
         
-        <span class="post-info-item"><i class="iconfont iconfont-size"></i>110</span>
+        
+        <h3 class="archive-year">2020</h3>
+        
+        <div class="archive-item">
+          <a class="archive-date" href="/2020/10/13/%E6%97%A5%E8%AF%AD%EF%BC%88%E4%B8%80%EF%BC%89/">10/13</a>
+          <a class="archive-title" href="/2020/10/13/%E6%97%A5%E8%AF%AD%EF%BC%88%E4%B8%80%EF%BC%89/">日语学习篇（一）</a>
+        </div>
+        
       </div>
     </div>
-  </div>
-</div>
-  
-  <div class="col-lg-4 col-md-6 col-sm-12 post-item">
-  <div class="post-wrap">
-    
-    <div class="post-top">
-      <div>置顶</div>
-    </div>
-    
-    <a href="/2020/10/13/%E6%97%A5%E8%AF%AD%EF%BC%88%E4%B8%80%EF%BC%89/" class="post-image">
-      <img   class="lazyload" data-original="/images/theme/sakura.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
-    </a>
-    <div class="post-content">
-      <h3 class="post-title"><a href="/2020/10/13/%E6%97%A5%E8%AF%AD%EF%BC%88%E4%B8%80%EF%BC%89/">日语学习篇（一）</a></h3>
-      
-      
-      
-      <div class="post-excerpt">
-        <p class="substr-3">一款简约的 Hexo 主题。</p>
-      </div>
-      <div class="post-info">
-        <span class="post-info-item"><i class="iconfont iconcalendar"></i>十月 13, 2020</span
-          class="post-info-item">
-        
-        <span class="post-info-item"><i class="iconfont iconeye"></i><span id="/2020/10/13/%E6%97%A5%E8%AF%AD%EF%BC%88%E4%B8%80%EF%BC%89/"
-            class="leancloud" data-flag-title="日语学习篇（一）"></span></span>
-        
-        <span class="post-info-item"><i class="iconfont iconfont-size"></i>480</span>
-      </div>
-    </div>
-  </div>
-</div>
-  
-</section>
-    <section class="paginator">
-  
-</section>
-  </div>
+  </section>
 </main>
   <footer class="footer">
   <div class="footer-social">
