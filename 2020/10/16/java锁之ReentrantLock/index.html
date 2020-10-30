@@ -192,12 +192,12 @@ Reen...">
 
 <p>AQS全称：AbstractQueuedSynchronizer，<strong>抽象队列式同步器。</strong></p>
 <p>AQS队列：</p>
-<p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/aqs.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/aqs.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  alt="galleries-1"></p>
 <p>整个AQS 队列里队头thread对应的那个node里面的thread不管什么情况都为空，当t2得到线程时会把自己的thread设为null并将与上一节点的引用去掉方便gc回收，队头设为自己。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">setHead(node);<br>p.next = <span class="hljs-keyword">null</span>;<br></code></pre></td></tr></table></figure>
 
 <p>以下是公平锁存在线程竞争执行的时候reentrantlock的执行情况大致如下：</p>
-<p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/reentrantlock2.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/reentrantlock2.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  alt="galleries-2"></p>
 <p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/reentrantlock1.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
 <p>图中根据锁的状态分为了两个分支先说右边分支，t2调用lock方法会去判断锁的状态如果锁处于被持有状态就会去排队调用addWaiter(Node.EXCLUSIVE), arg)。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">acquireQueued(addWaiter(Node.EXCLUSIVE), arg))<br></code></pre></td></tr></table></figure>
