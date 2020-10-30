@@ -14,8 +14,11 @@
 
   
   
-  <meta name="description" content="尝试着用park+自旋手写实现一把锁
-12345678..."> 
+  <meta name="description" content="一篇小练习
+
+
+尝试着用park+自旋手写实现一把锁
+..."> 
   
   <meta name="author" content="wangb"> 
 
@@ -74,8 +77,8 @@
       },
       donate: {
         enable: true,
-        alipay: 'https://benblog-images.oss-cn-shanghai.aliyuncs.com/alipay.jpg?Expires=1604048823&amp;OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&amp;Signature=eRfHElysPp2hheomx5F8g46hbM8%3D',
-        wechat: 'https://benblog-images.oss-cn-shanghai.aliyuncs.com/wechat.jpg?Expires=1604036001&amp;OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&amp;Signature=c8VJteza%2FikfDpT6LFink72sA9w%3D'
+        alipay: 'https://benblog-images.oss-cn-shanghai.aliyuncs.com/alipay.jpg',
+        wechat: 'https://benblog-images.oss-cn-shanghai.aliyuncs.com/wechat.jpg'
       },
       motto: {
         api: '',
@@ -163,7 +166,7 @@
     <article class="article">
   <div class="wrap">
     <section class="head">
-  <img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/aqsfm.jpg?Expires=1604048198&OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&Signature=OwKbSvgam15JkbUz9WAMgEXkRzo=" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/aqsfm.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
   <div class="head-mask">
     <h1 class="head-title">手写了一个锁</h1>
     <div class="head-info">
@@ -173,7 +176,7 @@
       <span class="post-info-item"><i class="iconfont iconeye"></i><span id="/2020/10/20/%E6%89%8B%E5%86%99%E4%BA%86%E4%B8%80%E4%B8%AA%E9%94%81/"
           class="leancloud" data-flag-title="手写了一个锁"></span></span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>2207</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>2215</span>
     </div>
   </div>
 </section>
@@ -181,8 +184,6 @@
       <section class="content">
         <p>尝试着用park+自旋手写实现一把锁</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">syncTest</span> &#123;<br>     <span class="hljs-keyword">static</span> <span class="hljs-keyword">volatile</span>  <span class="hljs-built_in">int</span> status = <span class="hljs-number">0</span>;<br>     <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-title">Queue</span>&lt;<span class="hljs-title">Thread</span>&gt; parkQueue</span> = <span class="hljs-keyword">new</span> LinkedList&lt;&gt;();<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span>(<span class="hljs-params">String[] args</span>)</span> &#123;<br>        Thread t1 = <span class="hljs-keyword">new</span> Thread()&#123;<br>            @Override<br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span>(<span class="hljs-params"></span>)</span> &#123;<br>                synctest();<br>            &#125;<br>        &#125;;<br><br><br>        Thread t2 = <span class="hljs-keyword">new</span> Thread()&#123;<br>            @Override<br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span>(<span class="hljs-params"></span>)</span> &#123;<br>                synctest();<br>            &#125;<br>        &#125;;<br><br>        t1.setName(<span class="hljs-string">&quot;t1&quot;</span>);<br>        t2.setName(<span class="hljs-string">&quot;t2&quot;</span>);<br>        t1.start();<br><span class="hljs-comment">//        try &#123;</span><br><span class="hljs-comment">//            Thread.sleep(2000);</span><br><span class="hljs-comment">//        &#125; catch (InterruptedException e) &#123;</span><br><span class="hljs-comment">//            e.printStackTrace();</span><br><span class="hljs-comment">//        &#125;</span><br>        t2.start();<br><br>        System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">&quot;ThreadMain-----------&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-comment">//自旋  上锁 让出内存</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">lock</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">while</span>(!compareAndSet(<span class="hljs-number">0</span>,<span class="hljs-number">1</span>))&#123;<br>            park();<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">//唤醒</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">unlock</span>(<span class="hljs-params"></span>)</span>&#123;<br>        status = <span class="hljs-number">0</span>;<br>        lock_notify();<br>    &#125;<br>    <span class="hljs-comment">//阻塞线程并将阻塞线程写入队列</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">park</span>(<span class="hljs-params"></span>)</span>&#123;<br>        parkQueue.offer(Thread.currentThread());<br>        LockSupport.park();<br>    &#125;<br>    <span class="hljs-comment">//从队列里拿出线程并唤醒 再次尝试获得锁</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">lock_notify</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">if</span>(parkQueue.size() != <span class="hljs-number">0</span>)&#123;<br>            Thread t = parkQueue.poll();<br>            LockSupport.unpark(t);<br>        &#125;<br><br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> boolean <span class="hljs-title">compareAndSet</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> i, <span class="hljs-built_in">int</span> j</span>)</span> &#123;<br>        <span class="hljs-keyword">if</span>(status == i)&#123;<br>            status = j;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">//测试方法</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">synctest</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">lock</span>();<br>        System.<span class="hljs-keyword">out</span>.println(Thread.currentThread().getName() +<span class="hljs-string">&quot;-------st&quot;</span>);<br>        <span class="hljs-keyword">try</span> &#123;<br>            Thread.sleep(<span class="hljs-number">8000</span>);<br>        &#125; catch (InterruptedException e) &#123;<br>            e.printStackTrace();<br>        &#125;<br><br>        System.<span class="hljs-keyword">out</span>.println(Thread.currentThread().getName() +<span class="hljs-string">&quot;-------ed&quot;</span>);<br>        unlock();<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
-
-
       </section>
       <section class="extra">
         
@@ -198,7 +199,7 @@
         
         <section class="donate">
   <div class="qrcode">
-    <img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/alipay.jpg?Expires=1604048823&OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&Signature=eRfHElysPp2hheomx5F8g46hbM8%3D" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+    <img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/alipay.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
   </div>
   <div class="icon">
     <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>

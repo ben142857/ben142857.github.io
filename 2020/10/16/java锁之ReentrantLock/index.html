@@ -76,8 +76,8 @@ Reen...">
       },
       donate: {
         enable: true,
-        alipay: 'https://benblog-images.oss-cn-shanghai.aliyuncs.com/alipay.jpg?Expires=1604048823&amp;OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&amp;Signature=eRfHElysPp2hheomx5F8g46hbM8%3D',
-        wechat: 'https://benblog-images.oss-cn-shanghai.aliyuncs.com/wechat.jpg?Expires=1604036001&amp;OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&amp;Signature=c8VJteza%2FikfDpT6LFink72sA9w%3D'
+        alipay: 'https://benblog-images.oss-cn-shanghai.aliyuncs.com/alipay.jpg',
+        wechat: 'https://benblog-images.oss-cn-shanghai.aliyuncs.com/wechat.jpg'
       },
       motto: {
         api: '',
@@ -192,13 +192,13 @@ Reen...">
 
 <p>AQS全称：AbstractQueuedSynchronizer，<strong>抽象队列式同步器。</strong></p>
 <p>AQS队列：</p>
-<p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/aqs.png?Expires=1604043769&OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&Signature=0qqZvCjU3CGV6wRnV4feQCv64Xk=" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/aqs.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
 <p>整个AQS 队列里队头thread对应的那个node里面的thread不管什么情况都为空，当t2得到线程时会把自己的thread设为null并将与上一节点的引用去掉方便gc回收，队头设为自己。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">setHead(node);<br>p.next = <span class="hljs-keyword">null</span>;<br></code></pre></td></tr></table></figure>
 
 <p>以下是公平锁存在线程竞争执行的时候reentrantlock的执行情况大致如下：</p>
-<p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/reentrantlock2.png?Expires=1604036520&OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&Signature=cGtcYXtOOJ+wyKhriCEcj443f78=" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
-<p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/reentrantlock1.png?Expires=1604036852&OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&Signature=ZifwwrM7Lr65U78ofWOWUaMp2gQ=" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/reentrantlock2.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/reentrantlock1.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
 <p>图中根据锁的状态分为了两个分支先说右边分支，t2调用lock方法会去判断锁的状态如果锁处于被持有状态就会去排队调用addWaiter(Node.EXCLUSIVE), arg)。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">acquireQueued(addWaiter(Node.EXCLUSIVE), arg))<br></code></pre></td></tr></table></figure>
 
@@ -244,7 +244,7 @@ Reen...">
         
         <section class="donate">
   <div class="qrcode">
-    <img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/alipay.jpg?Expires=1604048823&OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&Signature=eRfHElysPp2hheomx5F8g46hbM8%3D" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+    <img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/alipay.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
   </div>
   <div class="icon">
     <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
