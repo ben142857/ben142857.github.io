@@ -17,7 +17,7 @@
   <meta name="description" content="ReentrantLock的源码学习笔记
 
 
-开个新坑..."> 
+Reen..."> 
   
   <meta name="author" content="wangb"> 
 
@@ -76,8 +76,8 @@
       },
       donate: {
         enable: true,
-        alipay: '/images/theme/alipay.jpg',
-        wechat: '/images/theme/wechat.jpg'
+        alipay: 'https://benblog-images.oss-cn-shanghai.aliyuncs.com/alipay.jpg?Expires=1604048823&amp;OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&amp;Signature=eRfHElysPp2hheomx5F8g46hbM8%3D',
+        wechat: 'https://benblog-images.oss-cn-shanghai.aliyuncs.com/wechat.jpg?Expires=1604036001&amp;OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&amp;Signature=c8VJteza%2FikfDpT6LFink72sA9w%3D'
       },
       motto: {
         api: '',
@@ -175,13 +175,60 @@
       <span class="post-info-item"><i class="iconfont iconeye"></i><span id="/2020/10/16/java%E9%94%81%E4%B9%8BReentrantLock/"
           class="leancloud" data-flag-title="java锁之ReentrantLock"></span></span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>42</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>5597</span>
     </div>
   </div>
 </section>
     <section class="main">
       <section class="content">
-        <p>开个新坑，填坑日期未知╮(╯▽╰)╭</p>
+        <p>ReentrantLock 的实现三个关键技术自旋、park—unpark、CAS、AQS</p>
+<p>它是一个默认非公平可实现公平的的锁</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">ReentrantLock lock = <span class="hljs-keyword">new</span> ReentrantLock(<span class="hljs-keyword">true</span>);<span class="hljs-comment">//true表示公平锁    默认false非公平</span><br></code></pre></td></tr></table></figure>
+
+<p>synchronize 1.6以前即使交替执行也会调用os层面的函数依然是重量级的锁 1.8以后与ReentrantLock差别不大，但是ReentrantLock的Api更加丰富</p>
+<p>单线程—-交替执行其实与队列无关–java级别解决同步问题</p>
+<p>他是一个可重入锁，会去判断当前线程与正持有锁的线程是否是同一个如果是就调用内部计数器加一并将这个数赋给state。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (current == getExclusiveOwnerThread()) &#123;<br>    <span class="hljs-keyword">int</span> nextc = c + acquires;<br>    <span class="hljs-keyword">if</span> (nextc &lt; <span class="hljs-number">0</span>)<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">&quot;Maximum lock count exceeded&quot;</span>);<br>    setState(nextc);<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>AQS全称：AbstractQueuedSynchronizer，<strong>抽象队列式同步器。</strong></p>
+<p>AQS队列：</p>
+<p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/aqs.png?Expires=1604043769&OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&Signature=0qqZvCjU3CGV6wRnV4feQCv64Xk=" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>整个AQS 队列里队头thread对应的那个node里面的thread不管什么情况都为空，当t2得到线程时会把自己的thread设为null并将与上一节点的引用去掉方便gc回收，队头设为自己。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">setHead(node);<br>p.next = <span class="hljs-keyword">null</span>;<br></code></pre></td></tr></table></figure>
+
+<p>以下是公平锁存在线程竞争执行的时候reentrantlock的执行情况大致如下：</p>
+<p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/reentrantlock2.png?Expires=1604036520&OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&Signature=cGtcYXtOOJ+wyKhriCEcj443f78=" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/reentrantlock1.png?Expires=1604036852&OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&Signature=ZifwwrM7Lr65U78ofWOWUaMp2gQ=" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>图中根据锁的状态分为了两个分支先说右边分支，t2调用lock方法会去判断锁的状态如果锁处于被持有状态就会去排队调用addWaiter(Node.EXCLUSIVE), arg)。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">acquireQueued(addWaiter(Node.EXCLUSIVE), arg))<br></code></pre></td></tr></table></figure>
+
+<p>先实例化一个node再根据线程实例化一个node</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> Node <span class="hljs-title">addWaiter</span><span class="hljs-params">(Node mode)</span> </span>&#123;<br>        Node node = <span class="hljs-keyword">new</span> Node(Thread.currentThread(), mode);<br>        <span class="hljs-comment">// Try the fast path of enq; backup to full enq on failure</span><br>        Node pred = tail;<br>        <span class="hljs-keyword">if</span> (pred != <span class="hljs-keyword">null</span>) &#123;<br>            node.prev = pred;<br>            <span class="hljs-keyword">if</span> (compareAndSetTail(pred, node)) &#123;<br>                pred.next = node;<br>                <span class="hljs-keyword">return</span> node;<br>            &#125;<br>        &#125;<br>        enq(node);<br>        <span class="hljs-keyword">return</span> node;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果队列没被初始化就会再实例一个thread为null的node对象并将它设置为aqs的头和尾</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> Node <span class="hljs-title">enq</span><span class="hljs-params">(<span class="hljs-keyword">final</span> Node node)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (;;) &#123;<br>        Node t = tail;<br>        <span class="hljs-keyword">if</span> (t == <span class="hljs-keyword">null</span>) &#123; <span class="hljs-comment">// Must initialize</span><br>            <span class="hljs-keyword">if</span> (compareAndSetHead(<span class="hljs-keyword">new</span> Node()))<br>                tail = head;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            node.prev = t;<br>            <span class="hljs-keyword">if</span> (compareAndSetTail(t, node)) &#123;<br>                t.next = node;<br>                <span class="hljs-keyword">return</span> t;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>维护t2链表关系，t2入队执行<code>acquireQueued</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">acquireQueued</span><span class="hljs-params">(<span class="hljs-keyword">final</span> Node node, <span class="hljs-keyword">int</span> arg)</span> </span>&#123;<br>        <span class="hljs-keyword">boolean</span> failed = <span class="hljs-keyword">true</span>;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">boolean</span> interrupted = <span class="hljs-keyword">false</span>;<br>            <span class="hljs-keyword">for</span> (;;) &#123;<br>                <span class="hljs-keyword">final</span> Node p = node.predecessor();<br>                <span class="hljs-keyword">if</span> (p == head &amp;&amp; tryAcquire(arg)) &#123;<span class="hljs-comment">//自旋第一次调用tryAcquire尝试获得锁</span><br>                    setHead(node);<br>                    p.next = <span class="hljs-keyword">null</span>; <span class="hljs-comment">// help GC</span><br>                    failed = <span class="hljs-keyword">false</span>;<br>                    <span class="hljs-keyword">return</span> interrupted;<br>                &#125;<br>                <span class="hljs-keyword">if</span> (shouldParkAfterFailedAcquire(p, node) &amp;&amp;<br>                    parkAndCheckInterrupt())<br>                    interrupted = <span class="hljs-keyword">true</span>;<br>            &#125;<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            <span class="hljs-keyword">if</span> (failed)<br>                cancelAcquire(node);<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>成功就获得锁失败则进入<code>shouldParkAfterFailedAcquire(p, node)</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">shouldParkAfterFailedAcquire</span><span class="hljs-params">(Node pred, Node node)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> ws = pred.waitStatus;  <span class="hljs-comment">//  上一节点的ws=0</span><br>    <span class="hljs-keyword">if</span> (ws == Node.SIGNAL)  <span class="hljs-comment">// -1</span><br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">         * This node has already set status asking a release</span><br><span class="hljs-comment">         * to signal it, so it can safely park.</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>    <span class="hljs-keyword">if</span> (ws &gt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">         * Predecessor was cancelled. Skip over predecessors and</span><br><span class="hljs-comment">         * indicate retry.</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-keyword">do</span> &#123;<br>            node.prev = pred = pred.prev;<br>        &#125; <span class="hljs-keyword">while</span> (pred.waitStatus &gt; <span class="hljs-number">0</span>);<br>        pred.next = node;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">         * waitStatus must be 0 or PROPAGATE.  Indicate that we</span><br><span class="hljs-comment">         * need a signal, but don&#x27;t park yet.  Caller will need to</span><br><span class="hljs-comment">         * retry to make sure it cannot acquire before parking.</span><br><span class="hljs-comment">         */</span><br>        compareAndSetWaitStatus(pred, ws, Node.SIGNAL); <span class="hljs-comment">//将前一个节点的ws状态设置为-1</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>第一次返回false继续执行上层是一个死循环继续执行<code>tryAcquire(arg)</code>方法成功就获得锁失败就继续执行<code>shouldParkAfterFailedAcquire(p, node)</code>进行第二次自旋，此时前一个节点的waitStatus已经是-1直接返回true，继续执行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">parkAndCheckInterrupt()方法  <span class="hljs-comment">//执行 LockSupport.park(this); t2挂起</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>为什么要由后一个节点来设置前一个节点的ws状态呢？</strong></p>
+<p>因为上一个节点已经park()了不再往后执行了，一个睡着了的人还能通知外界我睡着了吗？，当然是别人看到我睡着了帮我把门关上告诉其他人我睡着了。为什么不再park()前将自己ws状态设为-1呢？，因为如果你修改了状态说它睡着了但是它park()执行失败了呢，并没有睡着，反而它在房间里偷偷玩起了手机呢。就会出现问题啦，所以才有了这样的设定。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">parkAndCheckInterrupt</span><span class="hljs-params">()</span> </span>&#123;<br>    LockSupport.park(<span class="hljs-keyword">this</span>);<br>    <span class="hljs-function"><span class="hljs-keyword">return</span> Thread.<span class="hljs-title">interrupted</span><span class="hljs-params">()</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>为什么这里还要自旋呢？</strong></p>
+<p>因为能不调用park()方法就尽量不去调用park()方法，park()方法调用的是os层面的函数，一旦调用了就成了一把重量级锁，至于为什么是两次是Doug Lea决定的这涉及到计算机科学了就不是我能考虑的范畴了）</p>
+<p>左边分支，如果锁的状态处于自由状态就要去判断自己是否需要排队，判断自己是否需要排队时又两个情况，队列是否初始化，如果没有初始化<code>hasQueuedPredecessors()</code>就会返回false加上！结果就为true，就执行cas加锁。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span> (!hasQueuedPredecessors() &amp;&amp;<br>    compareAndSetState(<span class="hljs-number">0</span>, acquires)) &#123;<br>    setExclusiveOwnerThread(current);<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">hasQueuedPredecessors</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">// The correctness of this depends on head being initialized</span><br>    <span class="hljs-comment">// before tail and on head.next being accurate if the current</span><br>    <span class="hljs-comment">// thread is first in queue.</span><br>    Node t = tail; <span class="hljs-comment">// Read fields in reverse initialization order</span><br>    Node h = head;<br>    Node s;<br>    <span class="hljs-keyword">return</span> h != t &amp;&amp;<br>        ((s = h.next) == <span class="hljs-keyword">null</span> || s.thread != Thread.currentThread());<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果已经被初始化又可以分为队列中元素大于一和队列中元素等于一两种情况，先说大于一的情况。队列中元素大于一 <code>h != t</code> 就返回true继续向下，既然队列元素大于一那<code>（s =h.next） == null</code>必然不成立，为什么这里还有个这个判断呢因为 <code>h != t</code> 不是原子操作在执行这行代码时队列中可能已经出队只剩下一个元素了。不过这种情况应该不大概率出现但是不得不说Doug Lea考虑的是真的周全。回到正题 （<code>s =h.next） == null</code> 等于false继续执行<code>s.thread != Thread.currentThread()</code> 这里是判断当前来询问的线程是否是位于队列排队第一的线程如果是就返回false整体返回false加上！得true执行cas加锁，如果不是位于第一的线程他就没有加锁的资格<code>s.thread != Thread.currentThread()</code>就返回true整体返回true加上！得false就不加锁，叫它继续睡还没轮到它。那什么情况下队列中只有一个元素呢，当整个队列队尾拿到锁的时候，就只有它一个元素<code>h != t</code>因为只有它一个所以头尾都是它，此处返回false不再继续执行整体返回false然后取反得到true执行cas加锁。</p>
       </section>
       <section class="extra">
         
@@ -197,7 +244,7 @@
         
         <section class="donate">
   <div class="qrcode">
-    <img   class="lazyload" data-original="/images/theme/alipay.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+    <img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/alipay.jpg?Expires=1604048823&OSSAccessKeyId=TMP.3KedhHDFwJb8Rn1UXMES4G4L3x4cy8eKL9BGUWK8y8vAbjeVFA347RxPU4dC3oUFXhVxX845vuG3daYRUDPiLB88XA1id7&Signature=eRfHElysPp2hheomx5F8g46hbM8%3D" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
   </div>
   <div class="icon">
     <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
@@ -206,10 +253,12 @@
 </section>
         
         
-  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%EF%BC%8C%E9%94%81/" rel="tag">源码，锁</a></li></ul>
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%94%81/" rel="tag">锁</a></li></ul>
 
         
 <nav class="nav">
+  
+    <a href="/2020/10/20/%E6%89%8B%E5%86%99%E4%BA%86%E4%B8%80%E4%B8%AA%E9%94%81/"><i class="iconfont iconleft"></i>手写了一个锁</a>
   
   
     <a href="/2020/10/13/%E6%97%A5%E8%AF%AD%EF%BC%88%E4%B8%80%EF%BC%89/">日语学习篇（一）<i class="iconfont iconright"></i></a>
