@@ -175,7 +175,7 @@ Reen...">
       <span class="post-info-item"><i class="iconfont iconeye"></i><span id="/2020/10/16/java%E9%94%81%E4%B9%8BReentrantLock/"
           class="leancloud" data-flag-title="java锁之ReentrantLock"></span></span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>5597</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>6436</span>
     </div>
   </div>
 </section>
@@ -229,6 +229,19 @@ Reen...">
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">hasQueuedPredecessors</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">// The correctness of this depends on head being initialized</span><br>    <span class="hljs-comment">// before tail and on head.next being accurate if the current</span><br>    <span class="hljs-comment">// thread is first in queue.</span><br>    Node t = tail; <span class="hljs-comment">// Read fields in reverse initialization order</span><br>    Node h = head;<br>    Node s;<br>    <span class="hljs-keyword">return</span> h != t &amp;&amp;<br>        ((s = h.next) == <span class="hljs-keyword">null</span> || s.thread != Thread.currentThread());<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>如果已经被初始化又可以分为队列中元素大于一和队列中元素等于一两种情况，先说大于一的情况。队列中元素大于一 <code>h != t</code> 就返回true继续向下，既然队列元素大于一那<code>（s =h.next） == null</code>必然不成立，为什么这里还有个这个判断呢因为 <code>h != t</code> 不是原子操作在执行这行代码时队列中可能已经出队只剩下一个元素了。不过这种情况应该不大概率出现但是不得不说Doug Lea考虑的是真的周全。回到正题 （<code>s =h.next） == null</code> 等于false继续执行<code>s.thread != Thread.currentThread()</code> 这里是判断当前来询问的线程是否是位于队列排队第一的线程如果是就返回false整体返回false加上！得true执行cas加锁，如果不是位于第一的线程他就没有加锁的资格<code>s.thread != Thread.currentThread()</code>就返回true整体返回true加上！得false就不加锁，叫它继续睡还没轮到它。那什么情况下队列中只有一个元素呢，当整个队列队尾拿到锁的时候，就只有它一个元素<code>h != t</code>因为只有它一个所以头尾都是它，此处返回false不再继续执行整体返回false然后取反得到true执行cas加锁。</p>
+<h3 id="打断"><a href="#打断" class="headerlink" title="打断"></a>打断</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">return</span> Thread.interrupted();要结合lockInterruptibly()方法去看<br></code></pre></td></tr></table></figure>
+
+<p>这个方法会判断在尝试加锁之前是否被打断如果被打断就做出正确响应。其他和lock方法差不多</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">acquireInterruptibly</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg)</span></span><br><span class="hljs-function">        <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>    <span class="hljs-keyword">if</span> (Thread.interrupted())<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> InterruptedException();<br>    <span class="hljs-keyword">if</span> (!tryAcquire(arg))<br>        doAcquireInterruptibly(arg);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>不同之处在:</p>
+<p>lock():</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span> (shouldParkAfterFailedAcquire(p, node) &amp;&amp;<br>        parkAndCheckInterrupt())<br>        interrupted = <span class="hljs-keyword">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>lockInterruptibly():</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span> (shouldParkAfterFailedAcquire(p, node) &amp;&amp;<br>        parkAndCheckInterrupt())<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> InterruptedException();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>因为lock和lockInterruptibly都调用的parkAndCheckInterrupt()，所以<code>interrupted = true;</code>是为了整体返回true去执行selfInterrupt();方法去还原用户行为，<code>return Thread.interrupted();</code>对于lockInterruptibly()方法就是为了打断能做出正确响应，对于lock()方法本身而言没有其他的影响及意义。</p>
       </section>
       <section class="extra">
         
