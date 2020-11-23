@@ -175,7 +175,7 @@ Reen...">
       <span class="post-info-item"><i class="iconfont iconeye"></i><span id="/2020/10/16/java%E9%94%81%E4%B9%8BReentrantLock/"
           class="leancloud" data-flag-title="java锁之ReentrantLock"></span></span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>6436</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>6497</span>
     </div>
   </div>
 </section>
@@ -196,6 +196,7 @@ Reen...">
 <p>整个AQS 队列里队头thread对应的那个node里面的thread不管什么情况都为空，当t2得到线程时会把自己的thread设为null并将与上一节点的引用去掉方便gc回收，队头设为自己。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">setHead(node);<br>p.next = <span class="hljs-keyword">null</span>;<br></code></pre></td></tr></table></figure>
 
+<p>非公平锁在存在线程竞争的情况下会去尝试加锁成功就获得锁如果失败执行的<code>acquire(1);</code>方法与下面公平锁执行流程一致。</p>
 <p>以下是公平锁存在线程竞争执行的时候reentrantlock的执行情况大致如下：</p>
 <p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/reentrantlock2.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  alt="galleries-2"></p>
 <p><img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/reentrantlock1.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
