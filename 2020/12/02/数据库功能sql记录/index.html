@@ -7,13 +7,18 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>归档 - 汐语: 2020</title>
+  <title>数据库功能sql记录 - 汐语</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
 
   
   
+  <meta name="description" content="sql
+
+
+一些不常用但可能会用到的sql
+mysql..."> 
   
   <meta name="author" content="wangb"> 
 
@@ -106,7 +111,7 @@
 
 <nav class="navbar">
   <div class="left"></div>
-  <div class="center">归档</div>
+  <div class="center">数据库功能sql记录</div>
   <div class="right">
     
       <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
@@ -157,47 +162,116 @@
   </div>
 </nav>
   <main id="main">
-  <section class="archive">
-    <div class="archive-container">
-      <div class="archive-post">
-        <h3 class="archive-total">归档: 5 篇</h3>
-        
-        
-        
-        <h3 class="archive-year">2020 年</h3>
-        
-        <div class="archive-item">
-          <a class="archive-date" href="/2020/12/02/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%9F%E8%83%BDsql%E8%AE%B0%E5%BD%95/">十二月 02</a>
-          <a class="archive-title" href="/2020/12/02/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%9F%E8%83%BDsql%E8%AE%B0%E5%BD%95/">数据库功能sql记录</a>
-        </div>
-        
-        
-        <div class="archive-item">
-          <a class="archive-date" href="/2020/10/20/%E6%89%8B%E5%86%99%E4%BA%86%E4%B8%80%E4%B8%AA%E9%94%81/">十月 20</a>
-          <a class="archive-title" href="/2020/10/20/%E6%89%8B%E5%86%99%E4%BA%86%E4%B8%80%E4%B8%AA%E9%94%81/">手写了一个锁</a>
-        </div>
-        
-        
-        <div class="archive-item">
-          <a class="archive-date" href="/2020/10/16/java%E9%94%81%E4%B9%8BReentrantLock/">十月 16</a>
-          <a class="archive-title" href="/2020/10/16/java%E9%94%81%E4%B9%8BReentrantLock/">java锁之ReentrantLock</a>
-        </div>
-        
-        
-        <div class="archive-item">
-          <a class="archive-date" href="/2020/10/13/%E6%97%A5%E8%AF%AD%EF%BC%88%E4%B8%80%EF%BC%89/">十月 13</a>
-          <a class="archive-title" href="/2020/10/13/%E6%97%A5%E8%AF%AD%EF%BC%88%E4%B8%80%EF%BC%89/">日语学习篇（一）</a>
-        </div>
-        
-        
-        <div class="archive-item">
-          <a class="archive-date" href="/2020/09/26/%E6%A2%A6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%9C%B0%E6%96%B9/">九月 26</a>
-          <a class="archive-title" href="/2020/09/26/%E6%A2%A6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%9C%B0%E6%96%B9/">起始的地方</a>
-        </div>
-        
-      </div>
+  <div class="container" id="container">
+    <article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/image013.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">数据库功能sql记录</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>十二月 02, 2020</span
+        class="post-info-item">
+      
+      <span class="post-info-item"><i class="iconfont iconeye"></i><span id="/2020/12/02/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%9F%E8%83%BDsql%E8%AE%B0%E5%BD%95/"
+          class="leancloud" data-flag-title="数据库功能sql记录"></span></span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>647</span>
     </div>
-  </section>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <p>一些不常用但可能会用到的sql</p>
+<p>mysql：</p>
+<p>查询数据库中所有表名称及注释（包含视图）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> TABLE_NAME,TABLE_COMMENT <span class="hljs-keyword">FROM</span> information_schema.TABLES <span class="hljs-keyword">WHERE</span> table_schema=<span class="hljs-string">&#x27;数据库名&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>查询数据库中所有表名称及注释（不包含视图）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> TABLE_NAME,TABLE_COMMENT <span class="hljs-keyword">FROM</span> information_schema.TABLES <span class="hljs-keyword">WHERE</span> table_schema=<span class="hljs-string">&#x27;数据库名称&#x27;</span> <span class="hljs-keyword">AND</span> table_type = <span class="hljs-string">&#x27;BASE TABLE&#x27;</span> <span class="hljs-keyword">AND</span> table_schema = <span class="hljs-keyword">DATABASE</span> ()<br></code></pre></td></tr></table></figure>
+
+<p>查询每张表中所有字段名及注释</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> COLUMN_NAME,column_comment <span class="hljs-keyword">FROM</span> INFORMATION_SCHEMA.Columns <span class="hljs-keyword">WHERE</span> table_name=<span class="hljs-string">&#x27;表名称&#x27;</span> <span class="hljs-keyword">AND</span> table_schema=<span class="hljs-string">&#x27;数据库名称&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>oracel：</p>
+<p>查询数据库中所有表名</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> t.table_name <span class="hljs-keyword">FROM</span> user_tables t<br></code></pre></td></tr></table></figure>
+
+<p>查询每张表中所有字段名</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> COLUMN_NAME <span class="hljs-keyword">FROM</span> USER_TAB_COLUMNS <span class="hljs-keyword">WHERE</span> TABLE_NAME = <span class="hljs-string">&#x27;表名称&#x27;</span><br></code></pre></td></tr></table></figure>
+      </section>
+      <section class="extra">
+        
+        <ul class="copyright">
+  
+  <li><strong>本文作者：</strong>wangb</li>
+  <li><strong>本文链接：</strong><a href="http://xywangb.cn/2020/12/02/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%9F%E8%83%BDsql%E8%AE%B0%E5%BD%95/index.html">http://xywangb.cn/2020/12/02/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%9F%E8%83%BDsql%E8%AE%B0%E5%BD%95/index.html</a></li>
+  <li><strong>版权声明：</strong>本博客所有文章均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
+      rel="external nofollow" target="_blank"> BY-NC-SA </a>许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        <section class="donate">
+  <div class="qrcode">
+    <img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/alipay.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%9F%E8%83%BD/" rel="tag">功能</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a></li></ul>
+
+        
+<nav class="nav">
+  
+  
+    <a href="/2020/10/20/%E6%89%8B%E5%86%99%E4%BA%86%E4%B8%80%E4%B8%AA%E9%94%81/">手写了一个锁<i class="iconfont iconright"></i></a>
+  
+</nav>
+
+      </section>
+      
+      <section class="comments">
+  
+  <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "oqcCRjPQseMqzqf7FaGB4xqI-gzGzoHsz",
+        app_key: "aKiQcOefNuKOhLKOYXmwgRlr",
+        placeholder: "留下点什么~",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article>
+  </div>
 </main>
   <footer class="footer">
   <div class="footer-social">
