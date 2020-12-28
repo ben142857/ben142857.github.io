@@ -7,18 +7,17 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>数据库功能sql记录 - 汐语</title>
+  <title>用LinkedHashMap的LRU - 汐语</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
 
   
   
-  <meta name="description" content="sql
+  <meta name="description" content="基于LinkedHashMap的LRU
 
 
-一些不常用但可能会用到的sql
-mysql..."> 
+什么是LR..."> 
   
   <meta name="author" content="wangb"> 
 
@@ -111,7 +110,7 @@ mysql...">
 
 <nav class="navbar">
   <div class="left"></div>
-  <div class="center">数据库功能sql记录</div>
+  <div class="center">用LinkedHashMap的LRU</div>
   <div class="right">
     
       <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
@@ -166,46 +165,38 @@ mysql...">
     <article class="article">
   <div class="wrap">
     <section class="head">
-  <img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/image013.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <img   class="lazyload" data-original="https://pic.izhaoo.com/2017071603.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
   <div class="head-mask">
-    <h1 class="head-title">数据库功能sql记录</h1>
+    <h1 class="head-title">用LinkedHashMap的LRU</h1>
     <div class="head-info">
-      <span class="post-info-item"><i class="iconfont iconcalendar"></i>十二月 02, 2020</span
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>十二月 28, 2020</span
         class="post-info-item">
       
-      <span class="post-info-item"><i class="iconfont iconeye"></i><span id="/2020/12/02/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%9F%E8%83%BDsql%E8%AE%B0%E5%BD%95/"
-          class="leancloud" data-flag-title="数据库功能sql记录"></span></span>
+      <span class="post-info-item"><i class="iconfont iconeye"></i><span id="/2020/12/28/%E5%9F%BA%E4%BA%8ELinkedHashMap%E7%9A%84LRU/"
+          class="leancloud" data-flag-title="用LinkedHashMap的LRU"></span></span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>647</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>2863</span>
     </div>
   </div>
 </section>
     <section class="main">
       <section class="content">
-        <p>一些不常用但可能会用到的sql</p>
-<p>mysql：</p>
-<p>查询数据库中所有表名称及注释（包含视图）</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> TABLE_NAME,TABLE_COMMENT <span class="hljs-keyword">FROM</span> information_schema.TABLES <span class="hljs-keyword">WHERE</span> table_schema=<span class="hljs-string">&#x27;数据库名&#x27;</span><br></code></pre></td></tr></table></figure>
+        <h3 id="什么是LRU？"><a href="#什么是LRU？" class="headerlink" title="什么是LRU？"></a>什么是LRU？</h3><p>如果一个数据在最近一段时间没有被访问到，那么在将来它被访问的可能性也很小。所以，当指定的空间已存满数据时，应当把最久没有被访问到的数据淘汰。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>1.数据额结构中要满足新增的在尾部和最新访问的要移动到尾部。</p>
+<p>2.容量满了之后要删除掉最久未使用那个元素。</p>
+<p>新建一个类继承自LinkedHashMap并重写removeEldestEntry()方法当容量不够就会淘汰 oldest 的页面。accessOrder为true时表示当前数据的插入读取顺序为访问顺序，false表示当前数据的插入读取顺序为插入顺序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LruTest</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">LinkedHashMap</span> </span>&#123;<br>    <span class="hljs-keyword">protected</span>  Integer maxElements;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">LruTest</span><span class="hljs-params">(<span class="hljs-keyword">int</span> maxSize)</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>(maxSize,<span class="hljs-number">1.6f</span>,<span class="hljs-keyword">true</span>);<span class="hljs-comment">//accessOrder:true</span><br>        maxElements = maxSize;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">removeEldestEntry</span><span class="hljs-params">(java.util.Map.Entry oldest)</span></span>&#123;<br>        <span class="hljs-keyword">return</span> size()&gt;maxElements;<br>    &#125;<br> &#125;<br></code></pre></td></tr></table></figure>
 
-<p>查询数据库中所有表名称及注释（不包含视图）</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> TABLE_NAME,TABLE_COMMENT <span class="hljs-keyword">FROM</span> information_schema.TABLES <span class="hljs-keyword">WHERE</span> table_schema=<span class="hljs-string">&#x27;数据库名称&#x27;</span> <span class="hljs-keyword">AND</span> table_type = <span class="hljs-string">&#x27;BASE TABLE&#x27;</span> <span class="hljs-keyword">AND</span> table_schema = <span class="hljs-keyword">DATABASE</span> ()<br></code></pre></td></tr></table></figure>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        Map&lt;String,Object&gt; lru = <span class="hljs-keyword">new</span> LruTest&lt;&gt;(<span class="hljs-number">5</span>);<br>        lru.put(<span class="hljs-string">&quot;key_1&quot;</span>,<span class="hljs-string">&quot;value_1111&quot;</span>);<br>        lru.put(<span class="hljs-string">&quot;key_2&quot;</span>,<span class="hljs-string">&quot;value_2222&quot;</span>);<br>        lru.put(<span class="hljs-string">&quot;key_3&quot;</span>,<span class="hljs-string">&quot;value_3333&quot;</span>);<br>        lru.put(<span class="hljs-string">&quot;key_4&quot;</span>,<span class="hljs-string">&quot;value_4444&quot;</span>);<br>        lru.put(<span class="hljs-string">&quot;key_5&quot;</span>,<span class="hljs-string">&quot;value_5555&quot;</span>);<br><br>        Iterator &lt;Map.Entry&lt;String, Object&gt;&gt; it = lru.entrySet().iterator();<br>        <span class="hljs-keyword">while</span>(it.hasNext())&#123;<br>            Map.Entry&lt;String, Object&gt; entry = it.next();<br>            System.out.println(<span class="hljs-string">&quot;key:&quot;</span> +entry.getKey()+ <span class="hljs-string">&quot; value:&quot;</span> +entry.getValue());<br>        &#125;<br>        <br>        System.out.println(<span class="hljs-string">&quot;------------------------------------------------------&quot;</span>);<br>        lru.get(<span class="hljs-string">&quot;key_2&quot;</span>);<br>        Iterator &lt;Map.Entry&lt;String, Object&gt;&gt; it1 = lru.entrySet().iterator();<br>        <span class="hljs-keyword">while</span>(it1.hasNext())&#123;<br>            Map.Entry&lt;String, Object&gt; entry = it1.next();<br>            System.out.println(<span class="hljs-string">&quot;key:&quot;</span> +entry.getKey()+ <span class="hljs-string">&quot; value:&quot;</span> +entry.getValue());<br>        &#125;<br>        <br>        System.out.println(<span class="hljs-string">&quot;------------------------------------------------------&quot;</span>);<br>        lru.put(<span class="hljs-string">&quot;key_6&quot;</span>,<span class="hljs-string">&quot;value_6666&quot;</span>);<br>        Iterator &lt;Map.Entry&lt;String, Object&gt;&gt; it2 = lru.entrySet().iterator();<br>        <span class="hljs-keyword">while</span>(it2.hasNext())&#123;<br>            Map.Entry&lt;String, Object&gt; entry = it2.next();<br>            System.out.println(<span class="hljs-string">&quot;key:&quot;</span> +entry.getKey()+ <span class="hljs-string">&quot; value:&quot;</span> +entry.getValue());<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
 
-<p>查询每张表中所有字段名及注释</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> COLUMN_NAME,column_comment <span class="hljs-keyword">FROM</span> INFORMATION_SCHEMA.Columns <span class="hljs-keyword">WHERE</span> table_name=<span class="hljs-string">&#x27;表名称&#x27;</span> <span class="hljs-keyword">AND</span> table_schema=<span class="hljs-string">&#x27;数据库名称&#x27;</span><br></code></pre></td></tr></table></figure>
-
-<p>oracel：</p>
-<p>查询数据库中所有表名</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> t.table_name <span class="hljs-keyword">FROM</span> user_tables t<br></code></pre></td></tr></table></figure>
-
-<p>查询每张表中所有字段名</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> COLUMN_NAME <span class="hljs-keyword">FROM</span> USER_TAB_COLUMNS <span class="hljs-keyword">WHERE</span> TABLE_NAME = <span class="hljs-string">&#x27;表名称&#x27;</span><br></code></pre></td></tr></table></figure>
+<h3 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs reStructuredText">key:key_1 value:value_1111<br>key:key_2 value:value_2222<br>key:key_3 value:value_3333<br>key:key_4 value:value_4444<br>key:key_5 value:value_5555<br>------------------------------------------------------<br>key:key_1 value:value_1111<br>key:key_3 value:value_3333<br>key:key_4 value:value_4444<br>key:key_5 value:value_5555<br>key:key_2 value:value_2222<br>------------------------------------------------------<br>key:key_3 value:value_3333<br>key:key_4 value:value_4444<br>key:key_5 value:value_5555<br>key:key_2 value:value_2222<br>key:key_6 value:value_6666<br></code></pre></td></tr></table></figure>
       </section>
       <section class="extra">
         
         <ul class="copyright">
   
   <li><strong>本文作者：</strong>wangb</li>
-  <li><strong>本文链接：</strong><a href="http://xywangb.cn/2020/12/02/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%9F%E8%83%BDsql%E8%AE%B0%E5%BD%95/index.html">http://xywangb.cn/2020/12/02/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%9F%E8%83%BDsql%E8%AE%B0%E5%BD%95/index.html</a></li>
+  <li><strong>本文链接：</strong><a href="http://xywangb.cn/2020/12/28/%E5%9F%BA%E4%BA%8ELinkedHashMap%E7%9A%84LRU/index.html">http://xywangb.cn/2020/12/28/%E5%9F%BA%E4%BA%8ELinkedHashMap%E7%9A%84LRU/index.html</a></li>
   <li><strong>版权声明：</strong>本博客所有文章均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
       rel="external nofollow" target="_blank"> BY-NC-SA </a>许可协议，转载请注明出处！</li>
   
@@ -223,15 +214,13 @@ mysql...">
 </section>
         
         
-  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%9F%E8%83%BD/" rel="tag">功能</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a></li></ul>
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81/" rel="tag">代码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
 
         
 <nav class="nav">
   
-    <a href="/2020/12/28/%E5%9F%BA%E4%BA%8ELinkedHashMap%E7%9A%84LRU/"><i class="iconfont iconleft"></i>用LinkedHashMap的LRU</a>
   
-  
-    <a href="/2020/10/20/%E6%89%8B%E5%86%99%E4%BA%86%E4%B8%80%E4%B8%AA%E9%94%81/">手写了一个锁<i class="iconfont iconright"></i></a>
+    <a href="/2020/12/02/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%9F%E8%83%BDsql%E8%AE%B0%E5%BD%95/">数据库功能sql记录<i class="iconfont iconright"></i></a>
   
 </nav>
 
