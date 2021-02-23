@@ -7,17 +7,17 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>用LinkedHashMap实现LRU - 汐语</title>
+  <title>DCL - 汐语</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
 
   
   
-  <meta name="description" content="基于LinkedHashMap的LRU
+  <meta name="description" content="双重校验锁(Double check lock)
 
 
-什么是LR..."> 
+..."> 
   
   <meta name="author" content="wangb"> 
 
@@ -110,7 +110,7 @@
 
 <nav class="navbar">
   <div class="left"></div>
-  <div class="center">用LinkedHashMap实现LRU</div>
+  <div class="center">DCL</div>
   <div class="right">
     
       <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
@@ -165,38 +165,126 @@
     <article class="article">
   <div class="wrap">
     <section class="head">
-  <img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/image014.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <img   class="lazyload" data-original="https://benblog-images.oss-cn-shanghai.aliyuncs.com/image016.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
   <div class="head-mask">
-    <h1 class="head-title">用LinkedHashMap实现LRU</h1>
+    <h1 class="head-title">DCL</h1>
     <div class="head-info">
-      <span class="post-info-item"><i class="iconfont iconcalendar"></i>十二月 28, 2020</span
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>二月 23, 2021</span
         class="post-info-item">
       
-      <span class="post-info-item"><i class="iconfont iconeye"></i><span id="/2020/12/28/%E5%9F%BA%E4%BA%8ELinkedHashMap%E7%9A%84LRU/"
-          class="leancloud" data-flag-title="用LinkedHashMap实现LRU"></span></span>
+      <span class="post-info-item"><i class="iconfont iconeye"></i><span id="/2021/02/23/DCL/"
+          class="leancloud" data-flag-title="DCL"></span></span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>2863</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1699</span>
     </div>
   </div>
 </section>
     <section class="main">
       <section class="content">
-        <h3 id="什么是LRU？"><a href="#什么是LRU？" class="headerlink" title="什么是LRU？"></a>什么是LRU？</h3><p>如果一个数据在最近一段时间没有被访问到，那么在将来它被访问的可能性也很小。所以，当指定的空间已存满数据时，应当把最久没有被访问到的数据淘汰。</p>
-<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>1.数据额结构中要满足新增的在尾部和最新访问的要移动到尾部。</p>
-<p>2.容量满了之后要删除掉最久未使用那个元素。</p>
-<p>新建一个类继承自LinkedHashMap并重写removeEldestEntry()方法当容量不够就会淘汰 oldest 的页面。accessOrder为true时表示当前数据的插入读取顺序为访问顺序，false表示当前数据的插入读取顺序为插入顺序。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LruTest</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">LinkedHashMap</span> </span>&#123;<br>    <span class="hljs-keyword">protected</span>  Integer maxElements;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">LruTest</span><span class="hljs-params">(<span class="hljs-keyword">int</span> maxSize)</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>(maxSize,<span class="hljs-number">1.6f</span>,<span class="hljs-keyword">true</span>);<span class="hljs-comment">//accessOrder:true</span><br>        maxElements = maxSize;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">removeEldestEntry</span><span class="hljs-params">(java.util.Map.Entry oldest)</span></span>&#123;<br>        <span class="hljs-keyword">return</span> size()&gt;maxElements;<br>    &#125;<br> &#125;<br></code></pre></td></tr></table></figure>
+        <p>为什么要使用双重校验锁？<br>在实现单例模式时如果在多线程的情况下<br>不加校验可能出现的情况：</p>
+<p>可能会出现多个实例  </p>
+<table>
+<thead>
+<tr>
+<th>TIME</th>
+<th>THREAD-A</th>
+<th>THREAD-B</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T1</td>
+<td>检查到singleton为空</td>
+<td></td>
+</tr>
+<tr>
+<td>T2</td>
+<td></td>
+<td>检查到singleton为空</td>
+</tr>
+<tr>
+<td>T3</td>
+<td></td>
+<td>初始化对象A</td>
+</tr>
+<tr>
+<td>T4</td>
+<td></td>
+<td>返回对象A</td>
+</tr>
+<tr>
+<td>T5</td>
+<td>初始化对象B</td>
+<td></td>
+</tr>
+<tr>
+<td>T6</td>
+<td>返回对象B</td>
+<td></td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">volatile</span> Singleton singleton;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span><span class="hljs-params">()</span> </span>&#123;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getSingleton</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (singleton == <span class="hljs-keyword">null</span>) &#123;<br>            singleton = <span class="hljs-keyword">new</span> Singleton();<br>        &#125;<br>        <span class="hljs-keyword">return</span> singleton;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        Map&lt;String,Object&gt; lru = <span class="hljs-keyword">new</span> LruTest&lt;&gt;(<span class="hljs-number">5</span>);<br>        lru.put(<span class="hljs-string">&quot;key_1&quot;</span>,<span class="hljs-string">&quot;value_1111&quot;</span>);<br>        lru.put(<span class="hljs-string">&quot;key_2&quot;</span>,<span class="hljs-string">&quot;value_2222&quot;</span>);<br>        lru.put(<span class="hljs-string">&quot;key_3&quot;</span>,<span class="hljs-string">&quot;value_3333&quot;</span>);<br>        lru.put(<span class="hljs-string">&quot;key_4&quot;</span>,<span class="hljs-string">&quot;value_4444&quot;</span>);<br>        lru.put(<span class="hljs-string">&quot;key_5&quot;</span>,<span class="hljs-string">&quot;value_5555&quot;</span>);<br><br>        Iterator &lt;Map.Entry&lt;String, Object&gt;&gt; it = lru.entrySet().iterator();<br>        <span class="hljs-keyword">while</span>(it.hasNext())&#123;<br>            Map.Entry&lt;String, Object&gt; entry = it.next();<br>            System.out.println(<span class="hljs-string">&quot;key:&quot;</span> +entry.getKey()+ <span class="hljs-string">&quot; value:&quot;</span> +entry.getValue());<br>        &#125;<br>        <br>        System.out.println(<span class="hljs-string">&quot;------------------------------------------------------&quot;</span>);<br>        lru.get(<span class="hljs-string">&quot;key_2&quot;</span>);<br>        Iterator &lt;Map.Entry&lt;String, Object&gt;&gt; it1 = lru.entrySet().iterator();<br>        <span class="hljs-keyword">while</span>(it1.hasNext())&#123;<br>            Map.Entry&lt;String, Object&gt; entry = it1.next();<br>            System.out.println(<span class="hljs-string">&quot;key:&quot;</span> +entry.getKey()+ <span class="hljs-string">&quot; value:&quot;</span> +entry.getValue());<br>        &#125;<br>        <br>        System.out.println(<span class="hljs-string">&quot;------------------------------------------------------&quot;</span>);<br>        lru.put(<span class="hljs-string">&quot;key_6&quot;</span>,<span class="hljs-string">&quot;value_6666&quot;</span>);<br>        Iterator &lt;Map.Entry&lt;String, Object&gt;&gt; it2 = lru.entrySet().iterator();<br>        <span class="hljs-keyword">while</span>(it2.hasNext())&#123;<br>            Map.Entry&lt;String, Object&gt; entry = it2.next();<br>            System.out.println(<span class="hljs-string">&quot;key:&quot;</span> +entry.getKey()+ <span class="hljs-string">&quot; value:&quot;</span> +entry.getValue());<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>加了校验不考虑重排序的情况：<br>可能会访问到一个未初始化完成的对象所以需要加上volatile关键字</p>
+<table>
+<thead>
+<tr>
+<th>TIME</th>
+<th>THREAD-A</th>
+<th>THREAD-B</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T1</td>
+<td>检查到singleton为空</td>
+<td></td>
+</tr>
+<tr>
+<td>T2</td>
+<td>获取锁</td>
+<td></td>
+</tr>
+<tr>
+<td>T3</td>
+<td>检查到singleton为空</td>
+<td></td>
+</tr>
+<tr>
+<td>T4</td>
+<td>为singleton分配内存空间</td>
+<td></td>
+</tr>
+<tr>
+<td>T5</td>
+<td>将singleton指向内存空间</td>
+<td></td>
+</tr>
+<tr>
+<td>T6</td>
+<td></td>
+<td>检查到singleton不为空</td>
+</tr>
+<tr>
+<td>T7</td>
+<td></td>
+<td>访问singleton（未初始化）</td>
+</tr>
+<tr>
+<td>T8</td>
+<td>初始化singleton</td>
+<td></td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Singleton singleton;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span><span class="hljs-params">()</span> </span>&#123;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getSingleton</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (singleton == <span class="hljs-keyword">null</span>) &#123;<br>            <span class="hljs-keyword">synchronized</span> (Singleton.class) &#123;<br>                <span class="hljs-keyword">if</span> (singleton == <span class="hljs-keyword">null</span>) &#123;<br>                    singleton = <span class="hljs-keyword">new</span> Singleton();<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> singleton;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h3 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs reStructuredText">key:key_1 value:value_1111<br>key:key_2 value:value_2222<br>key:key_3 value:value_3333<br>key:key_4 value:value_4444<br>key:key_5 value:value_5555<br>------------------------------------------------------<br>key:key_1 value:value_1111<br>key:key_3 value:value_3333<br>key:key_4 value:value_4444<br>key:key_5 value:value_5555<br>key:key_2 value:value_2222<br>------------------------------------------------------<br>key:key_3 value:value_3333<br>key:key_4 value:value_4444<br>key:key_5 value:value_5555<br>key:key_2 value:value_2222<br>key:key_6 value:value_6666<br></code></pre></td></tr></table></figure>
+<p>加上volatile关键字：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">volatile</span> Singleton singleton;<br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span><span class="hljs-params">()</span> </span>&#123;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getSingleton</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (singleton == <span class="hljs-keyword">null</span>) &#123;<br>            <span class="hljs-keyword">synchronized</span> (Singleton.class) &#123;<br>                <span class="hljs-keyword">if</span> (singleton == <span class="hljs-keyword">null</span>) &#123;<br>                    singleton = <span class="hljs-keyword">new</span> Singleton();<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> singleton;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
       </section>
       <section class="extra">
         
         <ul class="copyright">
   
   <li><strong>本文作者：</strong>wangb</li>
-  <li><strong>本文链接：</strong><a href="http://xywangb.cn/2020/12/28/%E5%9F%BA%E4%BA%8ELinkedHashMap%E7%9A%84LRU/index.html">http://xywangb.cn/2020/12/28/%E5%9F%BA%E4%BA%8ELinkedHashMap%E7%9A%84LRU/index.html</a></li>
+  <li><strong>本文链接：</strong><a href="http://xywangb.cn/2021/02/23/DCL/index.html">http://xywangb.cn/2021/02/23/DCL/index.html</a></li>
   <li><strong>版权声明：</strong>本博客所有文章均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
       rel="external nofollow" target="_blank"> BY-NC-SA </a>许可协议，转载请注明出处！</li>
   
@@ -214,15 +302,13 @@
 </section>
         
         
-  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81/" rel="tag">代码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81/" rel="tag">代码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%94%81/" rel="tag">锁</a></li></ul>
 
         
 <nav class="nav">
   
-    <a href="/2021/02/23/DCL/"><i class="iconfont iconleft"></i>DCL</a>
   
-  
-    <a href="/2020/12/02/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%9F%E8%83%BDsql%E8%AE%B0%E5%BD%95/">数据库功能sql记录<i class="iconfont iconright"></i></a>
+    <a href="/2020/12/28/%E5%9F%BA%E4%BA%8ELinkedHashMap%E7%9A%84LRU/">用LinkedHashMap实现LRU<i class="iconfont iconright"></i></a>
   
 </nav>
 
